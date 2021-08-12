@@ -9,19 +9,19 @@
 
 <div class="card">
   <div class="card-body login-card-body">
-    <p class="login-box-msg"><?= __('Sign in to start your session') ?></p>
+    <p class="login-box-msg"><?= __('Login') ?></p>
 
     <?= $this->Form->create() ?>
 
-    <?= $this->Form->control('username', [
+    <?= $this->Form->control('documento', [
       'label' => false,
-      'placeholder' => __('Username'),
+      'placeholder' => __('Usuario'),
       'append' => '<i class="fas fa-user"></i>'
     ]) ?>
 
     <?= $this->Form->control('password', [
       'label' => false,
-      'placeholder' => __('Password'),
+      'placeholder' => __('Senha'),
       'append' => '<i class="fas fa-lock"></i>'
     ]) ?>
 
@@ -31,7 +31,7 @@
       </div>
       <!-- /.col -->
       <div class="col-4">
-        <?= $this->Form->control(__('Sign In'), ['type'=>'submit', 'class'=>'btn btn-primary btn-block']) ?>
+        <?= $this->Form->submit(__('Sign In'), ['type'=>'submit', 'class'=>'btn btn-primary btn-block']) ?>
       </div>
       <!-- /.col -->
     </div>

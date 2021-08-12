@@ -5,7 +5,7 @@
  */
 ?>
 
-<?php $this->assign('title', __('Add Venda') ); ?>
+<?php $this->assign('title', __('Adicionar Venda') ); ?>
 
 <?php
 $this->assign('breadcrumb',

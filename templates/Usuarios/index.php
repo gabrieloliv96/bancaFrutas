@@ -51,7 +51,7 @@ $this->assign('breadcrumb',
             <td><?= h($usuario->nome) ?></td>
             <td><?= h($usuario->password) ?></td>
             <td><?= h($usuario->documento) ?></td>
-            <td><?= ($usuario->isAdm) ? __('Yes') : __('No') ?></td>
+            <!-- <td><?= ($usuario->isAdm) ? __('Yes') : __('No') ?></td> -->
             <td><?= h($usuario->created) ?></td>
             <td><?= h($usuario->modified) ?></td>
             <td class="actions">

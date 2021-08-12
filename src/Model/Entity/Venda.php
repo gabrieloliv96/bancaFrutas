@@ -37,6 +37,7 @@ class Venda extends Entity
         'created' => true,
         'modified' => true,
         'preco_venda' => true,
+        'desconta' => true,
         'fruta' => true,
         'usuario' => true,
     ];

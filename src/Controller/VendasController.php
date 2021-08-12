@@ -59,28 +59,30 @@ class VendasController extends AppController
             
             $venda = $this->Vendas->patchEntity($venda, $this->request->getData());
             // debug($venda->toArray());exit;
-            $fruta =  $this->Frutas->find("all")->select('qtd_disponivel')->where(['id_fruta'=>$venda->fruta_id]);
-            $qtd_frutas = $fruta->qtd_disponivel;
-            // debug($fruta->toArray());exit;
-            // debug($venda->toArray());exit;
-
-
-            if($venda->qtd_vendida<=($qtd_frutas)){
+            $fruta =  $this->Frutas->find()->select()->where(['id_fruta'=>$venda->fruta_id])->First();
+                        
+            if($venda->qtd_vendida<=$fruta->qtd_disponivel){
 
                 if ($this->Vendas->save($venda)) {
-
-                    $this->Flash->success(__('The venda has been saved.'));
+                    $frutas = $this->Frutas->query();
                     
-                    
+                    $qtd_pos_venda = $fruta->qtd_disponivel-$venda->qtd_vendida;
+                    $fruta['qtd_disponivel']=$qtd_pos_venda;
+                    $this->Frutas->save($fruta);
 
+                    // $frutas->update()->set(['qtd_disponivel',$fruta->qtd_disponivel-$venda->qtd_vendida])->where(['id_fruta',$fruta->id_fruta])->execute();
+                    // debug($fruta->sql());exit;
+                    $this->Flash->success(__('Venda realizada.'));
+                                        
                     return $this->redirect(['action' => 'index']);
                 }
                 
             }else
             {
-                $this->Flash->error(__('The venda could not be saved. Please, try again.'));
+                $this->Flash->error(__('Quantidade insuficiente no estoque.'));
             }
         }
+
         $frutas = $this->Vendas->Frutas->find('list', ['limit' => 200]);
         $usuarios = $this->Vendas->Usuarios->find('list', ['limit' => 200]);
         $this->set(compact('venda', 'frutas', 'usuarios'));

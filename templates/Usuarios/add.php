@@ -5,7 +5,7 @@
  */
 ?>
 
-<?php $this->assign('title', __('Add Usuario') ); ?>
+<?php $this->assign('title', __('Adicionar Usuario') ); ?>
 
 <?php
 $this->assign('breadcrumb',

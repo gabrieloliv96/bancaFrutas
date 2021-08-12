@@ -80,6 +80,11 @@ class VendasTable extends Table
             ->requirePresence('preco_venda', 'create')
             ->notEmptyString('preco_venda');
 
+        $validator
+        ->numeric('desconto')
+        ->requirePresence('desconto', 'create')
+        ->notEmptyString('desconto');
+            
         return $validator;
     }
 

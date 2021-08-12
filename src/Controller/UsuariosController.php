@@ -11,6 +11,7 @@ namespace App\Controller;
  */
 class UsuariosController extends AppController
 {
+    
     /**
      * Index method
      *
@@ -19,21 +20,58 @@ class UsuariosController extends AppController
     public function index()
     {
         $usuarios = $this->paginate($this->Usuarios);
-
-        $this->set(compact('usuarios'));
+        
+        $this->set(compact('usuario'));
+    }
+    
+    public function view($id = null)
+    {
+        $usuario = $this->Usuarios->get($id, [
+            'contain' => [],
+        ]);
+    
+        $this->set(compact('usuario'));
     }
 
     public function login()
     {
-        // $result = $this->Authentication->getResult();
-        // // If the user is logged in send them away.
-        // if ($result->isValid()) {
-        //     $target = $this->Authentication->getLoginRedirect() ?? '/home';
-        //     return $this->redirect($target);
-        // }
-        // if ($this->request->is('post') && !$result->isValid()) {
-        //     $this->Flash->error('Invalid username or password');
-        // }
+        $this->request->allowMethod(['get', 'post']);
+        $result = $this->Authentication->getResult();
+        // regardless of POST or GET, redirect if user is logged in
+        if ($result->isValid()) {
+            // redirect to /articles after login success
+            // return $this->redirect(['controller'=>'Usuarios','action'=>'index']);
+            $redirect = $this->request->getQuery('redirect', [
+                'controller' => 'usuarios',
+                'action' => 'index',
+            ]);
+    
+            
+        }
+        // display error if user submitted and authentication failed
+        if ($this->request->is('post') && !$result->isValid()) {
+            $this->Flash->error(__('Invalid username or password'));
+        }
+    }
+    public function register()
+    {
+        $usuario = $this->Usuarios->newEmptyEntity();
+
+        if ($this->request->is('post')) {
+            $usuario = $this->Usuarios->patchEntity($usuario, $this->request->getData());
+            // debug($user->toArray());exit;
+            $usuario->isAdm = false;
+            // debug($usuario->toArray());exit;
+
+            if ($this->Usuarios->save($usuario)) {
+                $this->Flash->success(__('Your registration was successful.'));
+
+                return $this->redirect('/usuarios/login');
+            }
+            // debug($usuario->toArray());exit;
+            $this->Flash->error(__('Your registration failed.'));
+        }
+        $this->set(compact('usuario'));
     }
 
     /**
@@ -43,15 +81,6 @@ class UsuariosController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
-    {
-        $usuario = $this->Usuarios->get($id, [
-            'contain' => [],
-        ]);
-
-        $this->set(compact('usuario'));
-    }
-
     /**
      * Add method
      *
