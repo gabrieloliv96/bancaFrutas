@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -11,47 +12,54 @@ namespace App\Controller;
  */
 class UsuariosController extends AppController
 {
-    
+
     /**
      * Index method
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+
+        $this->Authentication->allowUnauthenticated(['login']);
+    }
+
     public function index()
     {
         $usuarios = $this->paginate($this->Usuarios);
-        
+
         $this->set(compact('usuario'));
     }
-    
+
     public function view($id = null)
     {
         $usuario = $this->Usuarios->get($id, [
             'contain' => [],
         ]);
-    
+
         $this->set(compact('usuario'));
     }
+
 
     public function login()
     {
         $this->request->allowMethod(['get', 'post']);
+        $this->Authentication->allowUnauthenticated(['view', 'index']);
         $result = $this->Authentication->getResult();
-        // regardless of POST or GET, redirect if user is logged in
+        // If the user is logged in send them away.
         if ($result->isValid()) {
-            // redirect to /articles after login success
-            // return $this->redirect(['controller'=>'Usuarios','action'=>'index']);
-            $redirect = $this->request->getQuery('redirect', [
-                'controller' => 'usuarios',
-                'action' => 'index',
-            ]);
-    
-            
+            $target = $this->Authentication->getLoginRedirect() ?? '/home';
+            return $this->redirect($target);
         }
-        // display error if user submitted and authentication failed
         if ($this->request->is('post') && !$result->isValid()) {
-            $this->Flash->error(__('Invalid username or password'));
+            $this->Flash->error('Invalid username or password');
         }
+    }
+    public function logout()
+    {
+        $this->Authentication->logout();
+        return $this->redirect(['controller' => 'Users', 'action' => 'login']);
     }
     public function register()
     {
