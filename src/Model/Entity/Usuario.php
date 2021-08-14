@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Entity;
@@ -29,12 +30,8 @@ class Usuario extends Entity
      * @var array
      */
     protected $_accessible = [
-        'nome' => true,
-        'password' => true,
-        'documento' => true,
-        'isAdm' => true,
-        'created' => true,
-        'modified' => true,
+        '*' => true,
+        'id_usuario' => false
     ];
 
     /**
@@ -42,13 +39,9 @@ class Usuario extends Entity
      *
      * @var array
      */
-    protected $_hidden = [
-        'password',
-    ];
-    protected function _setPassword(string $password) : ?string
+    protected function _setPassword(string $password)
     {
-        if (strlen($password) > 0) {
-            return (new DefaultPasswordHasher())->hash($password);
-        }
+        $hasher = new DefaultPasswordHasher();
+        return $hasher->hash($password);
     }
 }
