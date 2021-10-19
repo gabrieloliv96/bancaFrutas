@@ -18,10 +18,9 @@ class FrutasController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Classificacaos'],
-        ];
-        $frutas = $this->paginate($this->Frutas);
+        
+        $frutas = $this->Frutas->find()->contain('Classificacaos');
+        $frutas = $this->paginate($frutas);
 
         $this->set(compact('frutas'));
     }
